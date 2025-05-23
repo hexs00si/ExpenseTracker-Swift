@@ -46,8 +46,6 @@ struct CategoryCardView: View {
                 .stroke(isSelected ? Color.blue : Color.gray.opacity(0.3), lineWidth: 2)
         )
         .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-        .scaleEffect(isSelected ? 1.05 : 1.0)
-        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isSelected)
         .accessibilityLabel("\(category.rawValue) category, \(amount, format: .currency(code: "USD"))")
     }
     

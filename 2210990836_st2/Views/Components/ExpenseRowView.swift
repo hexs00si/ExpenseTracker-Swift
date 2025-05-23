@@ -12,41 +12,52 @@ struct ExpenseRowView: View {
     
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 6) {
+            Image(systemName: iconForCategory(expense.category))
+                .font(.title2)
+                .foregroundStyle(.blue.gradient)
+                .frame(width: 40, height: 40)
+            
+            VStack(alignment: .leading, spacing: 4) {
                 Text(expense.description)
-                    .font(.system(.headline, design: .rounded, weight: .semibold))
+                    .font(.system(.headline, design: .rounded, weight: .medium))
                     .foregroundColor(.primary)
-                
-                Text(expense.category.rawValue)
-                    .font(.system(.caption, design: .rounded))
+                    .lineLimit(1)
+                Text(expense.date, style: .date)
+                    .font(.system(.subheadline, design: .rounded))
                     .foregroundColor(.secondary)
             }
             
             Spacer()
             
-            VStack(alignment: .trailing, spacing: 6) {
-                Text(expense.amount, format: .currency(code: "USD"))
-                    .font(.system(.subheadline, design: .rounded, weight: .bold))
-                    .foregroundColor(.primary)
-                
-                Text(expense.date.formatted(date: .abbreviated, time: .omitted))
-                    .font(.system(.caption, design: .rounded))
-                    .foregroundColor(.secondary)
-            }
+            Text(expense.amount, format: .currency(code: "USD"))
+                .font(.system(.headline, design: .rounded, weight: .semibold))
+                .foregroundColor(.primary)
+                .minimumScaleFactor(0.8)
+                .lineLimit(1)
         }
-        .padding()
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .frame(height: 60) // Fixed height to prevent stretching
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 8)
                 .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
         )
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(.horizontal, 4)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(expense.description), \(expense.amount, format: .currency(code: "USD")), \(expense.category.rawValue), \(expense.date.formatted(date: .abbreviated, time: .omitted))")
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+        )
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Expense: \(expense.description), \(expense.amount, format: .currency(code: "USD")), on \(expense.date, style: .date)")
+    }
+    
+    private func iconForCategory(_ category: ExpenseCategory) -> String {
+        switch category {
+        case .food: return "fork.knife"
+        case .transport: return "car"
+        case .utilities: return "bolt"
+        case .entertainment: return "film"
+        case .other: return "tag"
+        }
     }
 }
 
-#Preview {
-    ExpenseRowView(expense: Expense(amount: 20.0, description: "Coffee", date: Date(), category: .food))
-}

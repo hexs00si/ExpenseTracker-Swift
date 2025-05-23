@@ -13,8 +13,21 @@ struct ExpenseTrackerApp: App {
     
     var body: some Scene {
         WindowGroup {
-            DashboardView()
-                .environmentObject(expenseManager)
+            DashboardViewControllerRepresentable(expenseManager: expenseManager)
+                .ignoresSafeArea()
         }
+    }
+}
+
+struct DashboardViewControllerRepresentable: UIViewControllerRepresentable {
+    let expenseManager: ExpenseManager
+    
+    func makeUIViewController(context: Context) -> UINavigationController {
+        let dashboardVC = DashboardViewController(expenseManager: expenseManager)
+        return UINavigationController(rootViewController: dashboardVC)
+    }
+    
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
+        // No updates needed
     }
 }
